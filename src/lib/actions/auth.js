@@ -39,3 +39,40 @@ export async function signup(state, formData) {
     };
   }
 }
+
+export async function signin(state, formData) {
+  const validation = SignupFormSchema.safeParse({
+    email: formData.get("email"),
+    password: formData.get("password"),
+  });
+
+  if (!validation.success) {
+    return {
+      errors: validation.error.flatten().fieldErrors,
+    };
+  }
+
+  const { email, password } = validation.data;
+
+  try {
+    const res = await fetch("http://localhost:3001/api/auth/signin", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json();
+      return { errors: errorData };
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error during signin:", error);
+    return {
+      errors: { general: "Failed to connect to the server" },
+    };
+  }
+}
