@@ -12,3 +12,5 @@ const compat = new FlatCompat({
 const eslintConfig = [...compat.extends("next/core-web-vitals")];
 
 export default eslintConfig;
+
+// mongodb+srv://mongodbdeveloper2025:rY0lLUBwYTh4IsSk@soultag.v6jy4ak.mongodb.net/?retryWrites=true&w=majority&appName=soultag

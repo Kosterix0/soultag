@@ -11,24 +11,31 @@ export async function signup(state, formData) {
 
   if (!validation.success) {
     return {
-      errors: validationResult.error.flatten().fieldErrors,
+      errors: validation.error.flatten().fieldErrors,
     };
   }
-  // event.preventDefault();
-  // const formData = new FormData(event.currentTarget);
-  // const email = formData.get("email");
-  // const password = formData.get("password");
-  // const response = fetch("/api/login", {
-  //   method: "POST",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  //   body: JSON.stringify({ email, password }),
-  // });
-  // if (response.ok) {
-  //   router.push("/profile");
-  // } else {
-  //   // TODO: handle error
-  //   console.error("Login failed");
-  // }
+
+  const { name, email, password } = validation.data;
+
+  try {
+    const res = await fetch("http://localhost:3001/api/auth/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name, email, password }),
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json();
+      return { errors: errorData };
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error during signup:", error);
+    return {
+      errors: { general: "Failed to connect to the server" },
+    };
+  }
 }

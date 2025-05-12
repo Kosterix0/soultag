@@ -28,8 +28,7 @@ export default function Navbar() {
           </li>
         </ul>
       </nav>
-      <Link href="/login">
-        {/* <button className={BUTTON}>Sign In</button> */}
+      <Link href="/register">
         <MdAccountCircle className={BUTTON} />
       </Link>
     </header>

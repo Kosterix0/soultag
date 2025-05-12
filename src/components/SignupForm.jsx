@@ -1,10 +1,18 @@
 "use client";
 
 import { signup } from "@/lib/actions/auth";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function SignupForm() {
-  const [state, action] = useActionState(signup);
+  const [state, action, pending] = useActionState(signup);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (state?.success) {
+      router.push("/");
+    }
+  }, [state?.success, router]);
 
   return (
     <>
@@ -15,8 +23,9 @@ export default function SignupForm() {
         <h1 className="self-center text-2xl font-semibold text-[#f5ece6] ">
           Sign Up
         </h1>
+
         <label htmlFor="name" className="text-[#f5ece6] text-sm ">
-          name:
+          Name:
         </label>
         <input
           type="text"
@@ -25,9 +34,12 @@ export default function SignupForm() {
           className="text-[#f5ece6] pl-2 border-1 rounded-md border-[#ffffff62]"
           required
         />
-        {state?.errors?.name && <p>{state.errors.name}</p>}
+        {state?.errors?.name && (
+          <p className="text-red-500">{state.errors.name}</p>
+        )}
+
         <label htmlFor="email" className="text-[#f5ece6] text-sm ">
-          email:
+          Email:
         </label>
         <input
           type="email"
@@ -36,10 +48,12 @@ export default function SignupForm() {
           className="text-[#f5ece6] pl-2 border-1 rounded-md border-[#ffffff62]"
           required
         />
-        {state?.errors?.email && <p>{state.errors.email}</p>}
+        {state?.errors?.email && (
+          <p className="text-red-500">{state.errors.email}</p>
+        )}
 
         <label htmlFor="password" className="text-[#f5ece6] text-sm ">
-          password:
+          Password:
         </label>
         <input
           type="password"
@@ -48,14 +62,23 @@ export default function SignupForm() {
           className="text-[#f5ece6] pl-2 border-1 rounded-md border-[#ffffff62]"
           required
         />
-        {state?.errors?.password && <p>{state.errors.password}</p>}
+        {state?.errors?.password && (
+          <p className="text-red-500">{state.errors.password}</p>
+        )}
 
         <button
           type="submit"
+          disabled={pending}
           className="h-10 text-[#f5ece6] hover:bg-[#D0B9A7] bg-[#B08463] transition-all duration-300 cursor-pointer rounded-lg hover:text-[#7f5841] "
         >
-          Submit
+          {pending ? "Submitting..." : "Sign Up"}
         </button>
+
+        {state?.errors?.general && (
+          <p className="text-red-500 text-center mt-4">
+            {state.errors.general}
+          </p>
+        )}
       </form>
     </>
   );
