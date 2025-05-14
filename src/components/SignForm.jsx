@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 
 export default function SignForm({ isSignup, action, state, pending }) {
@@ -26,6 +24,7 @@ export default function SignForm({ isSignup, action, state, pending }) {
               placeholder="John"
               className="text-[#f5ece6] pl-2 rounded-md border-[#ffffff62] border"
               required
+              defaultValue={state?.name}
             />
             {state?.errors?.name && (
               <p className="text-red-500 text-sm mt-1">{state.errors.name}</p>
@@ -42,6 +41,7 @@ export default function SignForm({ isSignup, action, state, pending }) {
           placeholder="example@abc.com"
           className="text-[#f5ece6] pl-2 border-1 rounded-md border-[#ffffff62]"
           required
+          defaultValue={state?.email}
         />
         {state?.errors?.email && (
           <p className="text-red-500">{state.errors.email}</p>
@@ -56,6 +56,7 @@ export default function SignForm({ isSignup, action, state, pending }) {
           placeholder="password"
           className="text-[#f5ece6] pl-2 border-1 rounded-md border-[#ffffff62]"
           required
+          defaultValue={state?.password}
         />
         {state?.errors?.password && (
           <p className="text-red-500">{state.errors.password}</p>

@@ -1,6 +1,8 @@
 "use server";
 
-import { SignupFormSchema } from "@/lib/definitions";
+import { SignupFormSchema, SigninFormSchema } from "@/lib/definitions";
+import { signIn } from "next-auth/react";
+const URL = process.env.BASE_URL;
 
 export async function signup(state, formData) {
   const validation = SignupFormSchema.safeParse({
@@ -12,13 +14,16 @@ export async function signup(state, formData) {
   if (!validation.success) {
     return {
       errors: validation.error.flatten().fieldErrors,
+      name: formData.get("name"),
+      email: formData.get("email"),
+      password: formData.get("password"),
     };
   }
 
   const { name, email, password } = validation.data;
 
   try {
-    const res = await fetch("http://localhost:3001/api/auth/signup", {
+    const res = await fetch(`${URL}/api/auth/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -28,7 +33,7 @@ export async function signup(state, formData) {
 
     if (!res.ok) {
       const errorData = await res.json();
-      return { errors: errorData };
+      return { errors: errorData, name, email, password };
     }
 
     return { success: true };
@@ -36,12 +41,15 @@ export async function signup(state, formData) {
     console.error("Error during signup:", error);
     return {
       errors: { general: "Failed to connect to the server" },
+      name,
+      email,
+      password,
     };
   }
 }
 
 export async function signin(state, formData) {
-  const validation = SignupFormSchema.safeParse({
+  const validation = SigninFormSchema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
   });
@@ -49,30 +57,13 @@ export async function signin(state, formData) {
   if (!validation.success) {
     return {
       errors: validation.error.flatten().fieldErrors,
+      email: formData.get("email"),
+      password: formData.get("password"),
     };
   }
 
-  const { email, password } = validation.data;
-
-  try {
-    const res = await fetch("http://localhost:3001/api/auth/signin", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
-
-    if (!res.ok) {
-      const errorData = await res.json();
-      return { errors: errorData };
-    }
-
-    return { success: true };
-  } catch (error) {
-    console.error("Error during signin:", error);
-    return {
-      errors: { general: "Failed to connect to the server" },
-    };
-  }
+  return {
+    success: true,
+    credentials: validation.data,
+  };
 }
