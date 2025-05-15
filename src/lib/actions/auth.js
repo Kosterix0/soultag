@@ -1,7 +1,6 @@
 "use server";
 
 import { SignupFormSchema, SigninFormSchema } from "@/lib/definitions";
-import { signIn } from "next-auth/react";
 const URL = process.env.BASE_URL;
 
 export async function signup(state, formData) {
