@@ -4,7 +4,7 @@ import Image from "next/image";
 import { MdAccountCircle } from "react-icons/md";
 import { MdHomeFilled } from "react-icons/md";
 import { AiFillShop } from "react-icons/ai";
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 const LOGO = "/logo.png";
 const BUTTON =
@@ -15,7 +15,7 @@ export default function Navbar() {
   return (
     <header className="flex items-center justify-between pr-3 bg-[#714329] w-full h-15 shadow-[#95664b] shadow-lg rounded-b-lg">
       <Link href="/">
-        <Image src={LOGO} alt="Logo" width={80} height={80} />
+        <Image src={LOGO} alt="Logo" width={80} height={80} priority />
       </Link>
       <nav>
         <ul className="flex space-x-4">
